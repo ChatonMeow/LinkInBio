@@ -1,0 +1,194 @@
+@import "carbon-components-svelte/css/g10.css";
+
+//Mixins & functions
+@function em($target, $context: 16) {
+    @return ($target / $context) * 1em;
+}
+
+@function percent($elem, $container: 1200) {
+    @return #{(($elem * 100) / $container) + "%"};
+}
+
+@function vw($elem, $container: 1200) {
+    @return #{(($elem * 100) / $container) + "vw"};
+}
+
+@function vh($elem, $container: 700) {
+    @return #{(($elem * 100) / $container) + "vh"};
+}
+
+@function bp($name) {
+    @return map-get($bp, $name);
+}
+
+@function bp-next($name) {
+    $breakpoint-names: map-keys($bp);
+    $n: index($breakpoint-names, $name);
+
+    @return if($n != null and $n < length($breakpoint-names), bp(nth($breakpoint-names, $n + 1)) - 1, null);
+}
+
+@mixin mq-up($breakpoint) {
+    @media screen and (min-width: bp($breakpoint)) {
+        @content;
+    }
+}
+
+@mixin mq-down($breakpoint) {
+    @media screen and (max-width: bp-next($breakpoint)) {
+        @content;
+    }
+}
+
+@mixin mq-only($breakpoint) {
+    @media screen and (min-width: bp($breakpoint)) and (max-width: bp-next($breakpoint)) {
+        @content;
+    }
+}
+
+/*
+    Mixins examples
+
+    width: percent(500,800);
+    margin-bottom: em(10,50);
+
+    @include mq-up(sm) {
+
+    }
+
+    @include mq-down(xl) {
+
+    }
+
+    @include mq-only(md) {
+
+    }
+*/
+
+$viewport: 1200px;
+$padding-viewport: 20px;
+
+$t1: 0.25s;
+$t2: 0.5s;
+
+$bp: (
+    xs: 0,
+    s: 400px,
+    sm: 576px,
+    md: 768px,
+    lg: 1050px,
+    xl: 1200px,
+    hdpi: 1439px,
+    fullhd: 1919px,
+    5k: 2000px,
+) !default;
+
+//Helpers
+%reset-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+        margin: 0;
+    }
+}
+
+%clearfix {
+    &:after {
+        display: table;
+        clear: both;
+        content: "";
+    }
+}
+
+%default-anim {
+    transition: opacity $t2, transform $t2;
+    opacity: 0;
+    transform: translateY(2rem);
+
+    .is-viewed &,
+    &.is-viewed {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-size: 1rem;
+}
+
+//Typography
+p,
+ul,
+ol,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    &:first-child {
+        margin-top: 0;
+    }
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+p,
+ul,
+ol {
+    margin: 1em 0;
+}
+
+ul {
+    list-style: disc;
+    padding-left: 1.5em;
+}
+
+ol {
+    list-style: decimal;
+    padding-left: 1.5em;
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 1em 0 0.5em;
+}
+
+a {
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    .main {
+        flex-grow: 1;
+    }
+}
+
+.container {
+    margin: 0 auto;
+    width: 100%;
+    max-width: $viewport;
+    padding: 0 $padding-viewport;
+}

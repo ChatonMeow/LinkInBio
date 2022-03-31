@@ -6,18 +6,10 @@ import sveltePreprocess from 'svelte-preprocess';
 export default defineConfig({
   plugins: [svelte({
     emitCss: true,
-    preprocess: sveltePreprocess(),
+    preprocess: sveltePreprocess({
+      scss: {
+        prependData: `@import './src/theme/';`
+      }
+    }),
   })],
-  build: {
-    watch: {
-      include: 'src/theme/**',
-    }
-  },
-  css: { 
-    preprocessorOptions: { 
-      sass: { 
-        additionalData: ` @import "@/style/index.scss"; ` 
-      } 
-    } 
-  }
 })
