@@ -8,7 +8,7 @@ export default defineConfig({
     emitCss: true,
     preprocess: sveltePreprocess({
       scss: {
-        prependData: `@import './src/theme/';`
+        prependData: `@import './src/_mixins.scss';`
       }
     }),
   })],
